@@ -8,7 +8,7 @@ class Drug {
     required this.name,
   });
 
-  void DeleteDrug() async {
+  void Delete() async {
     final db = await DatabaseHelper.GetDatabase();
     db.delete("drugs", where: "id = ?", whereArgs: [id]);
   }
@@ -31,6 +31,14 @@ class Drug {
 
     drug.id = dbID;
     return drug;
+  }
+
+  static Future<Drug> getDrugById(int id) async {
+    final db = await DatabaseHelper.GetDatabase();
+    final List<Map<String, dynamic>> rows =
+        await db.query('drugs', where: 'id = ?', whereArgs: [id]);
+
+    return Drug(name: rows[0]['name']);
   }
 
   static Future<List<Drug>> getDrugs() async {

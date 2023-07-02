@@ -25,13 +25,19 @@ class _DrugPageState extends State<DrugPage> {
   }
 
   void deleteDrug(Drug drug) async {
-    drug.DeleteDrug();
+    drug.Delete();
+    drugs = await Drug.getDrugs();
+    setState(() {});
+  }
+
+  void load() async {
     drugs = await Drug.getDrugs();
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    load();
     return Column(
       children: <Widget>[
         Padding(
@@ -60,17 +66,18 @@ class _DrugPageState extends State<DrugPage> {
             children: [
               for (var drug in drugs)
                 Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
-                    child: Row(
-                      children: [
-                        Text(drug.name),
-                        Spacer(),
-                        IconButton(
-                            onPressed: () => deleteDrug(drug),
-                            icon: Icon(Icons.delete))
-                      ],
-                    ))
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
+                  child: Row(
+                    children: [
+                      Text(drug.name),
+                      Spacer(),
+                      IconButton(
+                          onPressed: () => deleteDrug(drug),
+                          icon: Icon(Icons.delete))
+                    ],
+                  ),
+                )
             ],
           ),
         )

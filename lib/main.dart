@@ -1,4 +1,5 @@
 import 'package:druglog2/pages/drug.dart';
+import 'package:druglog2/pages/log.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -18,10 +19,7 @@ class _MainState extends State<Main> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     DrugPage(),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
+    LogPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -56,7 +54,6 @@ class _MainState extends State<Main> {
             ),
           ],
           currentIndex: _selectedIndex,
-          // selectedItemColor: Colors.blue[700],
           onTap: _onItemTapped,
         ),
       ),

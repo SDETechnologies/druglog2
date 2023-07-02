@@ -6,11 +6,11 @@ class DatabaseHelper {
   static Future<Database> GetDatabase() async {
     WidgetsFlutterBinding.ensureInitialized();
 
-    return openDatabase(join(await getDatabasesPath(), 'druglog2.db'),
+    return openDatabase(join(await getDatabasesPath(), 'druglog.db'),
         onCreate: (db, version) {
       db.execute('CREATE TABLE drugs(id INTEGER PRIMARY KEY, name TEXT)');
       db.execute(
-          'CREATE TABLE logs (id INTEGER PRIMARY KEY, drug_id INTEGER,time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, notes TEXT)');
+          'CREATE TABLE logs (id INTEGER PRIMARY KEY, drug_id INTEGER, time TIMESTAMP, notes TEXT, dose TEXT, FOREIGN KEY (drug_id) REFERENCES drugs(id))');
     }, version: 1);
   }
 }
