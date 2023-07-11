@@ -1,5 +1,6 @@
 import 'package:druglog2/models/drug_model.dart';
-import 'package:druglog2/models/log_model.dart';
+import 'package:druglog2/models/entry_model.dart';
+import 'package:druglog2/pages/add_log_popup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ class LogPage extends StatefulWidget {
 }
 
 class _LogPageState extends State<LogPage> {
-  List<Log> logs = [];
+  List<Entry> logs = [];
   List<Drug> drugs = [];
   Drug? selectedDrug;
 
@@ -21,18 +22,23 @@ class _LogPageState extends State<LogPage> {
   TextEditingController doseEditingController = TextEditingController();
 
   getLogs() async {
-    logs = await Log.getLogs();
+    logs = await Entry.getLogs();
 
+    setState(() {});
+  }
+
+  void setDrug(dynamic drug) {
+    this.selectedDrug = drug;
     setState(() {});
   }
 
   addLog() async {
     var selectedDrugId = selectedDrug?.id;
     if (selectedDrugId != null) {
-      Log.insertLogWithDrug(notesEditingController.text, selectedDrugId,
-          doseEditingController.text);
+      Entry.insertLogWithDrug(notesEditingController.text, selectedDrugId,
+          doseEditingController.text, 1);
     } else {
-      Log.insertLog(notesEditingController.text);
+      Entry.insertLog(notesEditingController.text, 1);
     }
 
     getLogs();
@@ -51,133 +57,114 @@ class _LogPageState extends State<LogPage> {
     getLogs();
     getDrugs();
 
-    return Column(children: <Widget>[
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextField(
-          controller: notesEditingController,
-          maxLines: 4, //or null
-          decoration: InputDecoration.collapsed(hintText: "Text"),
-        ),
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add_circle_outline_outlined),
+        onPressed: () => {},
       ),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Text("Include drug?"),
-            Spacer(),
-            Checkbox(
-                value: includeDrug,
-                checkColor: Colors.blue,
-                onChanged: (bool? value) {
-                  setState(() {
-                    includeDrug = value!;
-                  });
-                }),
-          ],
-        ),
-      ),
-      Visibility(
-        visible: includeDrug,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Row(children: [
-                FilledButton(
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: Container(
-                          width: double.maxFinite,
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: notesEditingController,
+              maxLines: 4, //or null
+              decoration: InputDecoration.collapsed(hintText: "Text"),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Text("Include drug?"),
+                Spacer(),
+                Checkbox(
+                    value: includeDrug,
+                    checkColor: Colors.blue,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        includeDrug = value!;
+                      });
+                    }),
+              ],
+            ),
+          ),
+          Visibility(
+            visible: includeDrug,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Row(children: [
+                    FilledButton(
+                      onPressed: () {
+                        print("drutgs");
+                        print(drugs);
+                        AddLogPopup().show(context, drugs, setDrug);
+                      },
+                      child: Text("Select drug"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Text("Selected drug: ${selectedDrug?.name ?? ""}"),
+                    ),
+                  ]),
+                  Padding(
+                    padding: EdgeInsets.all(2),
+                    child: TextField(
+                      controller: doseEditingController,
+                      decoration: InputDecoration.collapsed(hintText: "Dose"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          FilledButton(child: Text("Add a log"), onPressed: () => addLog()),
+          Expanded(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                for (var log in logs)
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey.withOpacity(.5),
+                              blurRadius: 10,
+                              spreadRadius: 1,
+                              offset: const Offset(5.0, 5.0)),
+                        ],
+                      ),
+                      child: Container(
+                        color: Colors.grey.shade100,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Expanded(
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: drugs.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return OutlinedButton(
-                                      child: Text(drugs[index].name),
-                                      onPressed: () {
-                                        selectedDrug = drugs[index];
-                                        setState(() {});
-                                        Navigator.pop(context);
-                                      },
-                                    );
-                                  },
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Time: ${log.time}"),
+                              Text("Note: ${log.notes ?? ""}"),
+                              if (log.drugId != null)
+                                Column(
+                                  children: [
+                                    Text("Drug: ${log.drugName}"),
+                                    Text("Dose: ${log.dose}"),
+                                  ],
                                 ),
-                              ),
                             ],
                           ),
                         ),
-                      );
-                    },
-                  ),
-                  child: Text("Select drug"),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Text("Selected drug: ${selectedDrug?.name ?? ""}"),
-                ),
-              ]),
-              Padding(
-                padding: EdgeInsets.all(2),
-                child: TextField(
-                  controller: doseEditingController,
-                  decoration: InputDecoration.collapsed(hintText: "Dose"),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      FilledButton(child: Text("Add a log"), onPressed: () => addLog()),
-      Expanded(
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            for (var log in logs)
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(.5),
-                          blurRadius: 10,
-                          spreadRadius: 1,
-                          offset: const Offset(5.0, 5.0)),
-                    ],
-                  ),
-                  child: Container(
-                    color: Colors.grey.shade100,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Time: ${log.time}"),
-                          Text("Note: ${log.notes ?? ""}"),
-                          if (log.drugId != null)
-                            Column(
-                              children: [
-                                Text("Drug: ${log.drugName}"),
-                                Text("Dose: ${log.dose}"),
-                              ],
-                            ),
-                        ],
                       ),
                     ),
-                  ),
-                ),
-              )
-          ],
-        ),
+                  )
+              ],
+            ),
+          ),
+        ],
       ),
-    ]);
+    );
   }
 }

@@ -25,7 +25,7 @@ class _DrugPageState extends State<DrugPage> {
   }
 
   void deleteDrug(Drug drug) async {
-    drug.Delete();
+    drug.delete();
     drugs = await Drug.getDrugs();
     setState(() {});
   }
@@ -38,50 +38,52 @@ class _DrugPageState extends State<DrugPage> {
   @override
   Widget build(BuildContext context) {
     load();
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: TextField(
-            controller: drugNameController,
-            decoration: const InputDecoration(
-                border: OutlineInputBorder(), hintText: "Enter a drug"),
+    return Scaffold(
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: TextField(
+              controller: drugNameController,
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), hintText: "Enter a drug"),
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
-          child: Row(
-            children: [
-              FilledButton(
-                child: const Text("Add Drug"),
-                onPressed: insertDrug,
-              ),
-              const Spacer()
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
+            child: Row(
+              children: [
+                FilledButton(
+                  onPressed: insertDrug,
+                  child: const Text("Add Drug"),
+                ),
+                const Spacer()
+              ],
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
-          child: Column(
-            children: [
-              for (var drug in drugs)
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
-                  child: Row(
-                    children: [
-                      Text(drug.name),
-                      Spacer(),
-                      IconButton(
-                          onPressed: () => deleteDrug(drug),
-                          icon: Icon(Icons.delete))
-                    ],
-                  ),
-                )
-            ],
-          ),
-        )
-      ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
+            child: Column(
+              children: [
+                for (var drug in drugs)
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
+                    child: Row(
+                      children: [
+                        Text(drug.name),
+                        Spacer(),
+                        IconButton(
+                            onPressed: () => deleteDrug(drug),
+                            icon: Icon(Icons.delete))
+                      ],
+                    ),
+                  )
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
