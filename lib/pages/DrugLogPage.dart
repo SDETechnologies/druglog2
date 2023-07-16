@@ -17,6 +17,8 @@ class _DrugLogPageState extends State<DrugLogPage> {
   TextEditingController notesEditingController = TextEditingController();
   TextEditingController doseEditingController = TextEditingController();
 
+  var selectedDrug;
+
   getLogs() async {
     logs = await Entry.getLogs();
 
@@ -33,6 +35,10 @@ class _DrugLogPageState extends State<DrugLogPage> {
     drugs = await Drug.getDrugs();
   }
 
+  setSelectedDrug(Drug drug) async {
+    selectedDrug = drug;
+  }
+
   @override
   Widget build(BuildContext context) {
     getLogs();
@@ -47,8 +53,6 @@ class _DrugLogPageState extends State<DrugLogPage> {
               builder: (BuildContext context) {
                 bool includeDrug = false;
                 return StatefulBuilder(builder: (context, setState) {
-                  Drug? selectedDrug;
-
                   addEntry() async {
                     var selectedDrugId = selectedDrug?.id;
 
@@ -66,12 +70,6 @@ class _DrugLogPageState extends State<DrugLogPage> {
                     notesEditingController.clear();
                     doseEditingController.clear();
                     Navigator.pop(context);
-                  }
-
-                  setSelectedDrug(Drug drug) {
-                    selectedDrug = drug;
-                    setState(() {});
-                    print("set active drug 2 ${selectedDrug?.name}");
                   }
 
                   return AlertDialog(
@@ -140,8 +138,10 @@ class _DrugLogPageState extends State<DrugLogPage> {
                                 child: Text(drugs[index].id == selectedDrug?.id
                                     ? "${drugs[index].name} selected"
                                     : drugs[index].name),
-                                onPressed: () {
-                                  setSelectedDrug(drugs[index]);
+                                onPressed: () async {
+                                  print('drug pressed');
+                                  await setSelectedDrug(drugs[index]);
+                                  setState(() {});
                                 },
                               );
                             },
