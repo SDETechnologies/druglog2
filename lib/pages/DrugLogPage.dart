@@ -12,7 +12,7 @@ class DrugLogPage extends StatefulWidget {
 }
 
 class _DrugLogPageState extends State<DrugLogPage> {
-  List<Entry> logs = [];
+  List<Entry> entries = [];
   List<Drug> drugs = [];
 
   TextEditingController notesEditingController = TextEditingController();
@@ -20,20 +20,11 @@ class _DrugLogPageState extends State<DrugLogPage> {
 
   var selectedDrug;
 
-  getLogs() async {
-    logs = await Entry.getLogs();
-    setState(() {
-      print("sde logs ${logs}");
-    });
-  }
-
-  // void setSelectedDrug(dynamic drug) {
-  //   this.selectedDrug = drug;
-  //   setState(() {});
-  // }
-
-  getDrugs() async {
-    drugs = await Drug.getDrugs();
+  getEntries() async {
+    print('getEntries()');
+    entries = await widget.drugLog.getEntriesForDrugLog();
+    print('entries for log ${widget.drugLog}: ${entries}');
+    setState(() {});
   }
 
   setSelectedDrug(Drug drug) async {
@@ -42,8 +33,8 @@ class _DrugLogPageState extends State<DrugLogPage> {
 
   @override
   Widget build(BuildContext context) {
-    getLogs();
-    getDrugs();
+    WidgetsBinding.instance!
+        .addPostFrameCallback((_) async => await getEntries());
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -55,7 +46,7 @@ class _DrugLogPageState extends State<DrugLogPage> {
               // barrierDismissible: true,
               builder: (BuildContext context) {
                 return AddEntryDialog(parentCallback: () {
-                  setState(() {});
+                  // setState(() {});
                 });
               });
         },
@@ -66,7 +57,7 @@ class _DrugLogPageState extends State<DrugLogPage> {
             child: ListView(
               shrinkWrap: true,
               children: [
-                for (var log in logs)
+                for (var log in entries)
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Container(
