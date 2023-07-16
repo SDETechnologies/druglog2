@@ -24,7 +24,7 @@ class _DrugLogPageState extends State<DrugLogPage> {
     print('getEntries()');
     entries = await widget.drugLog.getEntriesForDrugLog();
     print('entries for log ${widget.drugLog}: ${entries}');
-    setState(() {});
+    // setState(() {});
   }
 
   setSelectedDrug(Drug drug) async {
@@ -33,8 +33,8 @@ class _DrugLogPageState extends State<DrugLogPage> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance!
-        .addPostFrameCallback((_) async => await getEntries());
+    print('Building drug log page for: ${widget.drugLog}');
+    // WidgetsBinding.instance!.addPostFrameCallback((_) => getEntries());
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

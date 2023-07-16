@@ -68,7 +68,7 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
 
   @override
   Widget build(BuildContext context) {
-    getLogs();
+    // getLogs();
     getDrugs();
 
     return AlertDialog(
