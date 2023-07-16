@@ -1,5 +1,5 @@
-import 'package:druglog2/models/drug_model.dart';
-import 'package:druglog2/models/entry_model.dart';
+import 'package:druglog2/models/Drug.dart';
+import 'package:druglog2/models/Entry.dart';
 import 'package:druglog2/pages/add_log_popup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -100,7 +100,7 @@ class _LogPageState extends State<LogPage> {
                       onPressed: () {
                         print("drutgs");
                         print(drugs);
-                        AddLogPopup().show(context, drugs, setDrug);
+                        // AddLogPopup().show(context, drugs, setDrug);
                       },
                       child: Text("Select drug"),
                     ),

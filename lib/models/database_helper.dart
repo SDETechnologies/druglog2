@@ -6,6 +6,10 @@ class DatabaseHelper {
   static Future<Database> getDatabase() async {
     WidgetsFlutterBinding.ensureInitialized();
 
+    var dbPath = join(await getDatabasesPath(), 'druglog.db');
+
+    print('db path: ' + dbPath);
+
     return openDatabase(join(await getDatabasesPath(), 'druglog.db'),
         onCreate: (db, version) {
       db.execute('CREATE TABLE drugs(id INTEGER PRIMARY KEY, name TEXT)');

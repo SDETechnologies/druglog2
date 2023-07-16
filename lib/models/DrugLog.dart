@@ -1,5 +1,5 @@
 import 'package:druglog2/models/database_helper.dart';
-import 'package:druglog2/models/entry_model.dart';
+import 'package:druglog2/models/Entry.dart';
 import 'package:intl/intl.dart';
 
 class DrugLog {
@@ -24,6 +24,7 @@ class DrugLog {
   }
 
   static Future<DrugLog> insertDrugLog(String title) async {
+    print('insertDrugLog(' + title + ')');
     final db = await DatabaseHelper.getDatabase();
 
     DrugLog drugLog = DrugLog(title: title);

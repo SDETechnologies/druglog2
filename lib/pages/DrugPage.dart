@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/drug_model.dart';
+import '../models/Drug.dart';
 
 class DrugPage extends StatefulWidget {
   const DrugPage({super.key});
