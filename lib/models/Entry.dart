@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-import 'database_helper.dart';
+import 'DatabaseHelper.dart';
 
 class Entry {
   int? id;
@@ -28,7 +28,7 @@ class Entry {
     List<Object?> parameters = <Object?>[entry.time, entry.notes, drugLogID];
 
     final List<Map<String, dynamic>> rows = await db.rawQuery(
-        'insert into logs(time, notes, drug_log_id) values (?, ?, ?) returning id',
+        'insert into entries(time, notes, drug_log_id) values (?, ?, ?) returning id',
         parameters);
 
     var entryID = rows.first['id'] as int;

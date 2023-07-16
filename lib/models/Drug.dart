@@ -1,4 +1,4 @@
-import 'package:druglog2/models/database_helper.dart';
+import 'package:druglog2/models/DatabaseHelper.dart';
 
 class Drug {
   int? id;

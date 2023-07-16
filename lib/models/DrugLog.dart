@@ -1,5 +1,5 @@
-import 'package:druglog2/models/database_helper.dart';
-import 'package:druglog2/models/entry_model.dart';
+import 'package:druglog2/models/DatabaseHelper.dart';
+import 'package:druglog2/models/Entry.dart';
 import 'package:intl/intl.dart';
 
 class DrugLog {
