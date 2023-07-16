@@ -1,6 +1,7 @@
 import 'package:druglog2/models/DrugLog.dart';
-import 'package:druglog2/pages/DrugLogPage.dart';
+import 'package:druglog2/pages/Home.dart';
 import 'package:druglog2/pages/DrugPage.dart';
+import 'package:druglog2/testing/TestPage.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -17,8 +18,9 @@ class Main extends StatefulWidget {
 class _MainState extends State<Main> {
   int _selectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
-    DrugLogPage(),
+    Home(),
     DrugPage(),
+    TestPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -44,12 +46,16 @@ class _MainState extends State<Main> {
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month),
+              icon: Icon(Icons.home),
               label: 'Drug Logs',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.calendar_month),
               label: 'Drugs',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.analytics),
+              label: 'Test',
             ),
           ],
           currentIndex: _selectedIndex,

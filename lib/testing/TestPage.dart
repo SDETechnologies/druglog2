@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:druglog2/models/DrugLog.dart';
+import 'package:druglog2/models/Drug.dart';
 import 'package:druglog2/components/DrugLogPreview.dart';
+import 'package:druglog2/components/DrugButton.dart';
+import 'package:druglog2/components/RoaDropdown.dart';
 
 class TestPage extends StatefulWidget {
   const TestPage({super.key});
@@ -12,8 +15,12 @@ class TestPage extends StatefulWidget {
 class _TestPageState extends State<TestPage> {
   // List<DrugLog> drugLogs = [];
 
-  static DrugLog testDrugLog1 = DrugLog(title: 'test drug 1');
-  static DrugLog testDrugLog2 = DrugLog(title: 'test drug 2');
+  var state = {'selected_roa': null};
+  String selectedRoa = '';
+
+  static Drug testDrug1 = Drug(name: 'amphetamine');
+  static DrugLog testDrugLog1 = DrugLog(title: 'test drug log 1');
+  static DrugLog testDrugLog2 = DrugLog(title: 'test drug log 2');
   // drugLogs.add(1,testDrugLog1);
   List<DrugLog> drugLogs = <DrugLog>[testDrugLog1, testDrugLog2];
   // drugLogs.insert(testDrugLog);
@@ -22,6 +29,12 @@ class _TestPageState extends State<TestPage> {
     await DrugLog.insertDrugLog('test');
     drugLogs = await DrugLog.getDrugLogs();
 
+    setState(() {});
+  }
+
+  getSelectedRoa(String roa) {
+    print('getSelectedRoa() in parent');
+    selectedRoa = roa;
     setState(() {});
   }
 
@@ -71,6 +84,11 @@ class _TestPageState extends State<TestPage> {
           padding: const EdgeInsets.all(20.0),
           child: DrugLogPreview(drugLog: testDrugLog2),
         ),
+        DrugButton(drug: testDrug1),
+        RoaDropdown(parentCallback: (roa) {
+          getSelectedRoa(roa);
+        }),
+        Text('Selected Roa: ${selectedRoa}'),
       ]),
     );
   }

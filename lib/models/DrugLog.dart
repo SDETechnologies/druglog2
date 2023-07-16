@@ -43,12 +43,14 @@ class DrugLog {
   static Future<List<DrugLog>> getDrugLogs() async {
     final db = await DatabaseHelper.getDatabase();
     final List<Map<String, dynamic>> rows = await db.query('drug_logs');
+    print('druglog rows: ${rows}');
 
     return List.generate(rows.length, (i) {
       DrugLog drugLog = DrugLog(
         title: rows[i]['name'],
       );
-      drugLog.id = rows[i]['creationTime'];
+      drugLog.title = rows[i]['title'];
+      drugLog.creationTime = rows[i]['creationTime'];
       drugLog.id = rows[i]['id'];
       return drugLog;
     });

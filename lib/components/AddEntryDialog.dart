@@ -3,8 +3,12 @@ import 'package:druglog2/models/drug.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+class AddEntryNotification extends Notification {}
+
 class AddEntryDialog extends StatefulWidget {
-  const AddEntryDialog({super.key});
+  final Function() parentCallback;
+  const AddEntryDialog({Key? key, required this.parentCallback})
+      : super(key: key);
 
   @override
   State<AddEntryDialog> createState() => _AddEntryDialogState();
@@ -18,7 +22,8 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
   TextEditingController doseEditingController = TextEditingController();
 
   var selectedDrug;
-  bool includeDrug = false;
+  bool addNote = false;
+  bool addDrug = false;
 
   getLogs() async {
     logs = await Entry.getLogs();
@@ -56,7 +61,9 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
     setState(() {});
     notesEditingController.clear();
     doseEditingController.clear();
+
     Navigator.pop(context);
+    widget.parentCallback();
   }
 
   @override
@@ -66,31 +73,22 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
 
     return AlertDialog(
         content: Container(
-      width: double.maxFinite,
+      // width: double.maxFinite,
       child: Column(
-        // mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: notesEditingController,
-              maxLines: 4, //or null
-              decoration: InputDecoration.collapsed(hintText: "Text"),
-            ),
-          ),
-          FilledButton(child: Text("Add entry"), onPressed: () => addEntry()),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                Text("Include drug?"),
+                Text("Add Note?"),
                 Checkbox(
-                    value: includeDrug,
+                    value: addNote,
                     checkColor: Colors.blue,
                     onChanged: (bool? value) {
-                      print("sde include drug ${includeDrug}");
+                      print("sde include drug ${addNote}");
                       setState(() {
-                        includeDrug = value!;
+                        addNote = value!;
                       });
                     }),
               ],
@@ -118,6 +116,7 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
             ),
           ),
           Expanded(
+            // Flexible(
             child: ListView.builder(
               shrinkWrap: true,
               itemCount: drugs.length,
@@ -135,6 +134,21 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
               },
             ),
           ),
+          if (addNote)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: notesEditingController,
+                maxLines: 4, //or null
+                decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 25, vertical: 200),
+                  hintText: "Note Text",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+          FilledButton(child: Text("Add entry"), onPressed: () => addEntry()),
         ],
       ),
     ));

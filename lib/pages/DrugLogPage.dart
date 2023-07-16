@@ -1,11 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:druglog2/models/DrugLog.dart';
 import 'package:druglog2/models/Entry.dart';
 import 'package:druglog2/models/drug.dart';
 import 'package:druglog2/components/AddEntryDialog.dart';
-import 'package:flutter/material.dart';
 
 class DrugLogPage extends StatefulWidget {
-  const DrugLogPage({super.key});
-
+  final DrugLog drugLog;
+  const DrugLogPage({Key? key, required this.drugLog}) : super(key: key);
   @override
   State<DrugLogPage> createState() => _DrugLogPageState();
 }
@@ -21,9 +22,9 @@ class _DrugLogPageState extends State<DrugLogPage> {
 
   getLogs() async {
     logs = await Entry.getLogs();
-
-    print("sde logs ${logs}");
-    setState(() {});
+    setState(() {
+      print("sde logs ${logs}");
+    });
   }
 
   // void setSelectedDrug(dynamic drug) {
@@ -45,13 +46,17 @@ class _DrugLogPageState extends State<DrugLogPage> {
     getDrugs();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
           showDialog(
               context: context,
+              // barrierDismissible: true,
               builder: (BuildContext context) {
-                return AddEntryDialog();
+                return AddEntryDialog(parentCallback: () {
+                  setState(() {});
+                });
               });
         },
       ),
