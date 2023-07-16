@@ -12,8 +12,10 @@ class TestPage extends StatefulWidget {
 class _TestPageState extends State<TestPage> {
   // List<DrugLog> drugLogs = [];
 
-  static DrugLog testDrugLog = DrugLog(title: 'test');
-  List<DrugLog> drugLogs = <DrugLog>[testDrugLog];
+  static DrugLog testDrugLog1 = DrugLog(title: 'test drug 1');
+  static DrugLog testDrugLog2 = DrugLog(title: 'test drug 2');
+  // drugLogs.add(1,testDrugLog1);
+  List<DrugLog> drugLogs = <DrugLog>[testDrugLog1, testDrugLog2];
   // drugLogs.insert(testDrugLog);
 
   getDrugLogs() async {
@@ -63,7 +65,11 @@ class _TestPageState extends State<TestPage> {
         ),
         Container(
           padding: const EdgeInsets.all(20.0),
-          child: DrugLogPreview(),
+          child: DrugLogPreview(testDrugLog1),
+        ),
+        Container(
+          padding: const EdgeInsets.all(20.0),
+          child: DrugLogPreview(testDrugLog2),
         ),
       ]),
     );
