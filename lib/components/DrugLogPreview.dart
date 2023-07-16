@@ -4,7 +4,7 @@ import 'package:druglog2/models/DrugLog.dart';
 class DrugLogPreview extends StatefulWidget {
   // const DrugLogPreview({super.key}, required this.drugLog);
   final DrugLog drugLog;
-  const DrugLogPreview(this.drugLog);
+  const DrugLogPreview({Key? key, required this.drugLog}) : super(key: key);
 
   @override
   State<DrugLogPreview> createState() => _DrugLogPreviewState();
