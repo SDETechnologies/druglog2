@@ -26,16 +26,11 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
   bool addDrug = false;
 
   getLogs() async {
-    logs = await Entry.getLogs();
+    // logs = await Entry.getLogs();
 
     print("sde logs ${logs}");
     setState(() {});
   }
-
-  // void setSelectedDrug(dynamic drug) {
-  //   this.selectedDrug = drug;
-  //   setState(() {});
-  // }
 
   getDrugs() async {
     drugs = await Drug.getDrugs();
@@ -50,11 +45,11 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
 
     if (selectedDrugId != null) {
       print("inserting with drug");
-      Entry.insertLogWithDrug(notesEditingController.text, selectedDrugId,
-          doseEditingController.text, 1);
+      // Entry.insertLogWithDrug(notesEditingController.text, selectedDrugId,
+      // doseEditingController.text, 1);
     } else {
       print("inserting without drug");
-      Entry.insertLog(notesEditingController.text, 1);
+      // Entry.insertLog(notesEditingController.text, 1);
     }
 
     getLogs();

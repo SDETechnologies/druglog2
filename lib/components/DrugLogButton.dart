@@ -16,7 +16,6 @@ class _DrugLogButtonState extends State<DrugLogButton> {
     return OutlinedButton(
       child: Text('${widget.drugLog.title} - ${widget.drugLog.creationTime}'),
       onPressed: () {
-        print('button pressed for druglog: ${widget.drugLog}');
         Navigator.push(
             context,
             MaterialPageRoute(

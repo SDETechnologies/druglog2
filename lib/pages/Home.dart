@@ -1,6 +1,7 @@
 import 'package:druglog2/models/DrugLog.dart';
 import 'package:druglog2/components/AddDrugLogDialog.dart';
 import 'package:druglog2/components/DrugLogListView.dart';
+import 'package:druglog2/pages/CreateEntryDrugSelectorPage.dart';
 import 'package:flutter/material.dart';
 import 'package:druglog2/components/DrugLogButton.dart';
 
@@ -26,32 +27,13 @@ class _DrugLogsPageState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    // getDrugLogs();
     WidgetsBinding.instance!
         .addPostFrameCallback((_) async => await getDrugLogs());
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          showDialog(
-              context: context,
-              // barrierDismissible: true,
-              builder: (BuildContext context) {
-                return AddDrugLogDialog(parentCallback: () {
-                  getDrugLogs();
-                  setState(() {});
-                });
-              });
-        },
-      ),
       body: Column(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text('Logs: '),
-          ),
           // Padding(
           //   padding: const EdgeInsets.all(4),
           //   child: Container(
@@ -81,7 +63,28 @@ class _DrugLogsPageState extends State<Home> {
                           );
                         },
                       );
-              })
+              }),
+          Spacer(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  minimumSize: const Size.fromHeight(50)),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    // barrierDismissible: true,
+                    builder: (BuildContext context) {
+                      return AddDrugLogDialog(parentCallback: () {
+                        getDrugLogs();
+                        setState(() {});
+                      });
+                    });
+              },
+              child: const Text("Add Log"),
+            ),
+          ),
         ],
       ),
     );

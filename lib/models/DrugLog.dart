@@ -1,5 +1,8 @@
 import 'package:druglog2/models/DatabaseHelper.dart';
+import 'package:druglog2/models/Drug.dart';
 import 'package:druglog2/models/Entry.dart';
+import 'package:druglog2/models/ROA.dart';
+import 'package:druglog2/models/Unit.dart';
 import 'package:intl/intl.dart';
 
 class DrugLog {
@@ -43,7 +46,6 @@ class DrugLog {
   static Future<List<DrugLog>> getDrugLogs() async {
     final db = await DatabaseHelper.getDatabase();
     final List<Map<String, dynamic>> rows = await db.query('drug_logs');
-    print('druglog rows: ${rows}');
 
     return List.generate(rows.length, (i) {
       DrugLog drugLog = DrugLog(
@@ -56,23 +58,35 @@ class DrugLog {
     });
   }
 
-  Future<List<Entry>> getEntriesForDrugLog() async {
+  Future<List<Entry>> getEntries() async {
     final db = await DatabaseHelper.getDatabase();
+
     List<Object?> parameters = <Object?>[id];
 
-    final List<Map<String, dynamic>> rows = await db.rawQuery(
-        'select e.id id, d.id drug_id, e.time time, e.notes notes, e.dose dose, d.name drug_name from entries e left join drugs d on e.drug_id = e.id where e.drug_log_id = ? order by e.time desc',
-        parameters);
+    final List<Map<String, dynamic>> rows = await db.rawQuery('''select 
+        id, 
+        time,
+        dose, 
+        drug_id, 
+        roa_id,
+        unit_id
+        from entries
+        where drug_log_id = ?
+        order by time desc''', parameters);
 
-    return List.generate(rows.length, (i) {
+    List<Entry> entries = [];
+
+    await Future.forEach(rows, (element) async {
       Entry entry = Entry();
-      entry.id = rows[i]['id'];
-      entry.time = rows[i]['time'];
-      entry.dose = rows[i]['dose'];
-      entry.notes = rows[i]['notes'];
-      entry.drugId = rows[i]['drug_id'];
-      entry.drugName = rows[i]['drug_name'];
-      return entry;
+      entry.id = element['id'];
+      entry.time = element['time'];
+      entry.dose = element['dose'];
+      entry.drug = await Drug.getDrugById(element['drug_id']);
+      entry.roa = await ROA.getById(element['roa_id']);
+      entry.unit = await Unit.getById(element['unit_id']);
+      entries.add(entry);
     });
+
+    return entries;
   }
 }
