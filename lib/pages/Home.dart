@@ -1,7 +1,5 @@
 import 'package:druglog2/models/DrugLog.dart';
 import 'package:druglog2/components/AddDrugLogDialog.dart';
-import 'package:druglog2/components/DrugLogListView.dart';
-import 'package:druglog2/pages/CreateEntryDrugSelectorPage.dart';
 import 'package:flutter/material.dart';
 import 'package:druglog2/components/DrugLogButton.dart';
 

@@ -12,19 +12,19 @@ class CreateEntryDosePage extends StatefulWidget {
 }
 
 class _CreateEntryDosePageState extends State<CreateEntryDosePage> {
-  List<Unit> units = [];
   int? selectedIndex;
   TextEditingController amountEditingController = TextEditingController();
 
-  void getAllUnits() async {
-    units = await Unit.getUnits();
-    setState(() {});
+  List<Unit> units = [];
+
+  Future<List<Unit>> getAllUnits() async {
+    List<Unit> u = await Unit.getUnits();
+    units = u;
+    return u;
   }
 
   @override
   Widget build(BuildContext context) {
-    getAllUnits();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Enter amount"),
@@ -38,24 +38,33 @@ class _CreateEntryDosePageState extends State<CreateEntryDosePage> {
                 hintText: "Enter amount", border: OutlineInputBorder()),
           ),
         ),
-        Expanded(
-          child: ListView.builder(
-              itemCount: units.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(
-                    title: Text(units[index].value!),
-                    tileColor: selectedIndex == index ? Colors.black12 : null,
-                    onTap: (() {
-                      setState(() {
-                        selectedIndex = index;
-                      });
+        FutureBuilder<List<Unit>>(
+            future: getAllUnits(),
+            builder:
+                (BuildContext context, AsyncSnapshot<List<Unit>> snapshot) {
+              if (!snapshot.hasData) {
+                return Text("Loading");
+              }
+              return Expanded(
+                child: ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListTile(
+                          title: Text(snapshot.data![index].value!),
+                          tileColor:
+                              selectedIndex == index ? Colors.black12 : null,
+                          onTap: (() {
+                            setState(() {
+                              selectedIndex = index;
+                            });
+                          }),
+                        ),
+                      );
                     }),
-                  ),
-                );
-              }),
-        ),
+              );
+            }),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: FilledButton(
@@ -64,7 +73,9 @@ class _CreateEntryDosePageState extends State<CreateEntryDosePage> {
                 minimumSize: const Size.fromHeight(50)),
             child: Text("Select date"),
             onPressed: () {
-              if (selectedIndex != null && amountEditingController.text != "") {
+              if (selectedIndex != null &&
+                  units != [] &&
+                  amountEditingController.text != "") {
                 CreateEntry.unit = units[selectedIndex!];
                 CreateEntry.dose = amountEditingController.text;
                 Navigator.push(

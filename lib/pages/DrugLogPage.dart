@@ -1,6 +1,5 @@
 import 'package:druglog2/global/CreateEntryState.dart';
 import 'package:druglog2/pages/CreateEntryDrugSelectorPage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:druglog2/models/DrugLog.dart';
 import 'package:druglog2/models/Entry.dart';

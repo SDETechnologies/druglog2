@@ -1,8 +1,6 @@
 import 'package:druglog2/global/CreateEntryState.dart';
 import 'package:druglog2/models/ROA.dart';
-import 'package:druglog2/models/Unit.dart';
 import 'package:druglog2/pages/CreateEntryDoseSelectorPage.dart';
-import 'package:druglog2/pages/CreateEntryDrugSelectorPage.dart';
 import 'package:flutter/material.dart';
 
 class CreateEntryROASelectorPagState extends StatefulWidget {
@@ -18,9 +16,10 @@ class _CreateEntryROASelectorPagStateState
   List<ROA> roas = [];
   int? selectedIndex;
 
-  void getAllRoas() async {
-    roas = await ROA.getROAs();
-    setState(() {});
+  Future<List<ROA>> getAllRoas() async {
+    List<ROA> r = await ROA.getROAs();
+    roas = r;
+    return r;
   }
 
   @override
@@ -29,28 +28,37 @@ class _CreateEntryROASelectorPagStateState
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Select a drug"),
+        title: const Text("Select ROA"),
       ),
       body: Column(
         children: [
-          Expanded(
-            child: ListView.builder(
-                itemCount: roas.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: ListTile(
-                      title: Text(roas[index].value!),
-                      tileColor: selectedIndex == index ? Colors.black12 : null,
-                      onTap: (() {
-                        setState(() {
-                          selectedIndex = index;
-                        });
+          FutureBuilder<List<ROA>>(
+              future: getAllRoas(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<ROA>> snapshot) {
+                if (!snapshot.hasData) {
+                  return Text("Loading");
+                }
+                return Expanded(
+                  child: ListView.builder(
+                      itemCount: roas.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: ListTile(
+                            title: Text(roas[index].value!),
+                            tileColor:
+                                selectedIndex == index ? Colors.black12 : null,
+                            onTap: (() {
+                              setState(() {
+                                selectedIndex = index;
+                              });
+                            }),
+                          ),
+                        );
                       }),
-                    ),
-                  );
-                }),
-          ),
+                );
+              }),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: FilledButton(

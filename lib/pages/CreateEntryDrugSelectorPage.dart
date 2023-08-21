@@ -17,39 +17,47 @@ class _CreateEntryDrugSelectorPageState
   List<Drug> drugs = [];
   int? selectedIndex;
 
-  getDrugs() async {
-    drugs = await Drug.getDrugs();
-    setState(() {});
+  Future<List<Drug>> getDrugs() async {
+    List<Drug> d = await Drug.getDrugs();
+    drugs = d;
+    return d;
   }
 
   @override
   Widget build(BuildContext context) {
-    getDrugs();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Select a drug"),
       ),
       body: Column(
         children: [
-          Expanded(
-            child: ListView.builder(
-                itemCount: drugs.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: ListTile(
-                      title: Text(drugs[index].name),
-                      tileColor: selectedIndex == index ? Colors.black12 : null,
-                      onTap: (() {
-                        setState(() {
-                          selectedIndex = index;
-                        });
+          FutureBuilder<List<Drug>>(
+              future: getDrugs(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<Drug>> snapshot) {
+                if (!snapshot.hasData) {
+                  return Text("Loading");
+                }
+                return Expanded(
+                  child: ListView.builder(
+                      itemCount: drugs.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: ListTile(
+                            title: Text(drugs[index].name),
+                            tileColor:
+                                selectedIndex == index ? Colors.black12 : null,
+                            onTap: (() {
+                              setState(() {
+                                selectedIndex = index;
+                              });
+                            }),
+                          ),
+                        );
                       }),
-                    ),
-                  );
-                }),
-          ),
+                );
+              }),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: FilledButton(
